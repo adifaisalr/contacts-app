@@ -5,8 +5,8 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.assignment.adifaisalr.contactsapplication"
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -17,15 +17,75 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:26.+'
+    // App's dependencies, including test
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.google.guava:guava:$rootProject.guavaVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:26.+'
-    testCompile 'junit:junit:4.12'
+
+    // Dependencies injection
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+
+    // Networking
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    // Rx
+    compile 'io.reactivex.rxjava2:rxjava:2.1.2'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    // ImageLoader
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
+
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.ext.runnerVersion"
+
+    // Dependencies for Android unit tests
+    androidTestCompile "junit:junit:$rootProject.ext.junitVersion"
+    androidTestCompile "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    androidTestCompile "com.google.dexmaker:dexmaker:$rootProject.ext.dexmakerVersion"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:$rootProject.ext.dexmakerVersion"
+
+    // Espresso UI Testing
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:$rootProject.espressoVersion"
+    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:design:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.google.code.findbugs:jsr305:3.0.1"
 }
